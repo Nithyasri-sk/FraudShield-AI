@@ -19,18 +19,18 @@ import { toBackendDate, toBackendDateTime } from "../utils/backendFormat";
  * its backend responds with.
  */
 // Manual single-transaction endpoint.
-const PREDICT_URL = import.meta.env.VITE_TRANSACTION_MANUAL_API||
+const PREDICT_URL = import.meta.env.VITE_API_URL||
     "https://bank-fraud-manudb.onrender.com/api/predict";
 // CSV batch-analysis endpoint. Deliberately a separate service/URL from
 // PREDICT_URL above — the two are different deployments.
-const UPLOAD_PREDICT_URL = import.meta.env.VITE_TRANSACTION_CSV_API ||
+const UPLOAD_PREDICT_URL = import.meta.env.VITE_UPLOAD_API_URL ||
     "https://bank-fraud-db.onrender.com/api/predict";
 // Second, independently-deployed CSV batch model. Different response
 // shape entirely from analyzeDataset() below — returns a flat per-row
 // list (row_id, fraud_probability, prediction), not account/transaction
 // grouped data. Kept as its own function (but still in this same
 // service module) since the two backends are unrelated deployments.
-const MODEL2_PREDICT_URL = import.meta.env.VITE_ACCOUNT_FRAUD_API||
+const MODEL2_PREDICT_URL = import.meta.env.VITE_MODEL2_API_URL||
     "https://fraud-detection1-api.onrender.com/predict-csv";
 class FraudApiError extends Error {
     code;
