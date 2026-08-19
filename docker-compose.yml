@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  model1_api:
+    build: ./backend/model1
+    ports:
+      - "10001:10000"
+    restart: always
+
+  model2_csv_api:
+    build: ./backend/model2-csvinput
+    ports:
+      - "10002:10000"
+    restart: always
+
+  model2_manual_api:
+    build: ./backend/model2-manualinput
+    ports:
+      - "10003:10000"
+    restart: always
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - model1_api
+      - model2_csv_api
+      - model2_manual_api
+    restart: always
