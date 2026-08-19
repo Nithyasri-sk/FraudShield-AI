@@ -1,0 +1,26 @@
+# Use an official, lightweight Python runtime
+FROM python:3.10-slim
+
+# Prevent Python from writing .pyc files and enable unbuffered logging
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Install system compilation dependencies required for libraries like CatBoost/Scikit-Learn
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy dependencies list and install python packages
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy all model files, json configurations, and source code into the container
+COPY . .
+
+# Expose port 10000 to match your existing Render web deployment port
+EXPOSE 10000
+
+# Start the application using Gunicorn (as defined in your Procfile)
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:10000"]
